@@ -1,16 +1,5 @@
 {
-  "income": [
-    {
-      "amount": 500.0,
-      "category": "Other",
-      "date": "2026-03-16"
-    }
-  ],
-  "expenses": [
-    {
-      "amount": 50.0,
-      "category": "Other",
-      "date": "2026-03-16"
-    }
-  ]
+  "starting_balance": 66.0,
+  "income": [],
+  "expenses": []
 }

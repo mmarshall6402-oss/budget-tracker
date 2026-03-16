@@ -1,0 +1,87 @@
+from flask import Flask, render_template, request, redirect, url_for
+import json
+import os
+from datetime import datetime
+
+app = Flask(__name__)
+DATA_FILE = "budget.json"
+
+# Load or create data
+if os.path.exists(DATA_FILE):
+    with open(DATA_FILE, "r") as f:
+        data = json.load(f)
+else:
+    data = {"starting_balance": 0, "income": [], "expenses": []}
+
+def save_data():
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+
+def get_balance():
+    total_income = sum(i["amount"] for i in data["income"])
+    total_expense = sum(e["amount"] for e in data["expenses"])
+    return data.get("starting_balance", 0) + total_income - total_expense
+
+@app.route("/")
+def index():
+    income_summary = {}
+    for i in data["income"]:
+        income_summary[i["category"]] = income_summary.get(i["category"], 0) + i["amount"]
+
+    expense_summary = {}
+    for e in data["expenses"]:
+        expense_summary[e["category"]] = expense_summary.get(e["category"], 0) + e["amount"]
+
+    balance = get_balance()
+    return render_template("index.html",
+                           income_summary=income_summary,
+                           expense_summary=expense_summary,
+                           balance=balance,
+                           starting_balance=data.get("starting_balance", 0))
+
+@app.route("/add", methods=["POST"])
+def add():
+    type_ = request.form.get("type")
+    amount = float(request.form.get("amount"))
+    category = request.form.get("category") or "Other"
+    entry = {"amount": amount, "category": category, "date": datetime.now().strftime("%Y-%m-%d")}
+
+    if type_ == "income":
+        data["income"].append(entry)
+    else:
+        data["expenses"].append(entry)
+
+    save_data()
+    return redirect(url_for("index"))
+
+@app.route("/weekly_salary", methods=["POST"])
+def weekly_salary():
+    hours = float(request.form.get("hours"))
+    rate = float(request.form.get("rate"))
+    income = hours * rate
+    category = request.form.get("category") or "Weekly Salary"
+    data["income"].append({
+        "amount": income,
+        "category": category,
+        "date": datetime.now().strftime("%Y-%m-%d")
+    })
+    save_data()
+    return redirect(url_for("index"))
+
+@app.route("/clear", methods=["POST"])
+def clear():
+    data["income"] = []
+    data["expenses"] = []
+    data["starting_balance"] = 0
+    save_data()
+    return redirect(url_for("index"))
+
+@app.route("/set_starting_balance", methods=["POST"])
+def set_starting_balance():
+    starting = float(request.form.get("starting_balance"))
+    data["starting_balance"] = starting
+    save_data()
+    return redirect(url_for("index"))
+
+if __name__ == "__main__":
+    app.run(debug=True)

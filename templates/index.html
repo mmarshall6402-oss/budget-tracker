@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Budget Tracker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            padding: 20px 0;
+        }
+
+        form, .summary {
+            background-color: #1E1E1E;
+            margin: 20px auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        input, select, button {
+            margin: 8px 0;
+            padding: 10px;
+            width: calc(100% - 24px);
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .summary h3, .summary h2 {
+            color: #4CAF50;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            background-color: #2C2C2C;
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 6px;
+        }
+
+        input[type=number], input[type=text], select {
+            background-color: #2C2C2C;
+            color: #E0E0E0;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid #4CAF50;
+        }
+
+        button.clear-btn {
+            background-color: #f44336;
+        }
+
+        button.clear-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Budget Tracker</h1>
+
+    <!-- Starting Balance -->
+    <form action="/set_starting_balance" method="POST">
+        <h3>Set Starting Balance</h3>
+        <input type="number" step="0.01" name="starting_balance" required value="{{ starting_balance }}">
+        <button type="submit">Set Starting Balance</button>
+    </form>
+
+    <!-- Add Income/Expense -->
+    <form action="/add" method="POST">
+        <h3>Add Income/Expense</h3>
+        <select name="type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+        </select>
+        <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+        <input type="text" name="category" placeholder="Category (optional)">
+        <button type="submit">Add Entry</button>
+    </form>
+
+    <!-- Weekly Salary -->
+    <form action="/weekly_salary" method="POST">
+        <h3>Weekly Salary Calculator</h3>
+        <input type="number" step="0.01" name="hours" placeholder="Hours Worked" required>
+        <input type="number" step="0.01" name="rate" placeholder="$ Per Hour" required>
+        <input type="text" name="category" placeholder="Category (optional)">
+        <button type="submit">Add Weekly Salary</button>
+    </form>
+
+    <!-- Clear All -->
+    <form action="/clear" method="POST">
+        <button type="submit" class="clear-btn">Clear Everything</button>
+    </form>
+
+    <!-- Income Summary -->
+    <div class="summary">
+        <h3>Income Summary</h3>
+        <ul>
+            {% for cat, amt in income_summary.items() %}
+                <li>{{ cat }}: ${{ amt }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Expense Summary -->
+    <div class="summary">
+        <h3>Expense Summary</h3>
+        <ul>
+            {% for cat, amt in expense_summary.items() %}
+                <li>{{ cat }}: ${{ amt }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Current Balance -->
+    <div class="summary">
+        <h2>Current Balance: ${{ balance }}</h2>
+    </div>
+</body>
+</html>
