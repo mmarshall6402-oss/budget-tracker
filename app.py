@@ -6,80 +6,100 @@ from datetime import datetime
 app = Flask(__name__)
 DATA_FILE = "budget.json"
 
-# Load or create data
 if os.path.exists(DATA_FILE):
     with open(DATA_FILE, "r") as f:
         data = json.load(f)
 else:
-    data = {"starting_balance": 0, "income": [], "expenses": []}
+    data = {"cash": 0, "transactions": [], "bills": []}
+
+for key in ["cash", "transactions", "bills"]:
+    if key not in data:
+        data[key] = [] if key != "cash" else 0
 
 def save_data():
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=2)
 
 def get_balance():
-    total_income = sum(i["amount"] for i in data["income"])
-    total_expense = sum(e["amount"] for e in data["expenses"])
-    return data.get("starting_balance", 0) + total_income - total_expense
+    total_in = sum(t["amount"] for t in data["transactions"] if t["type"] == "in")
+    total_out = sum(t["amount"] for t in data["transactions"] if t["type"] == "out")
+    return data["cash"] + total_in - total_out
+
+def get_upcoming_total():
+    return sum(b["amount"] for b in data["bills"] if not b.get("paid", False))
 
 @app.route("/")
 def index():
-    income_summary = {}
-    for i in data["income"]:
-        income_summary[i["category"]] = income_summary.get(i["category"], 0) + i["amount"]
-
-    expense_summary = {}
-    for e in data["expenses"]:
-        expense_summary[e["category"]] = expense_summary.get(e["category"], 0) + e["amount"]
-
     balance = get_balance()
+    upcoming_total = get_upcoming_total()
+    shortfall = balance - upcoming_total
+    bills = sorted(data["bills"], key=lambda b: b.get("due_days", 999))
+    recent = list(reversed(data["transactions"][-30:]))
     return render_template("index.html",
-                           income_summary=income_summary,
-                           expense_summary=expense_summary,
-                           balance=balance,
-                           starting_balance=data.get("starting_balance", 0))
+        balance=balance,
+        cash=data["cash"],
+        upcoming_total=upcoming_total,
+        shortfall=shortfall,
+        bills=bills,
+        transactions=recent)
 
-@app.route("/add", methods=["POST"])
-def add():
-    type_ = request.form.get("type")
-    amount = float(request.form.get("amount"))
-    category = request.form.get("category") or "Other"
-    entry = {"amount": amount, "category": category, "date": datetime.now().strftime("%Y-%m-%d")}
-
-    if type_ == "income":
-        data["income"].append(entry)
-    else:
-        data["expenses"].append(entry)
-
+@app.route("/set_cash", methods=["POST"])
+def set_cash():
+    data["cash"] = float(request.form.get("cash", 0))
     save_data()
     return redirect(url_for("index"))
 
-@app.route("/weekly_salary", methods=["POST"])
-def weekly_salary():
-    hours = float(request.form.get("hours"))
-    rate = float(request.form.get("rate"))
-    income = hours * rate
-    category = request.form.get("category") or "Weekly Salary"
-    data["income"].append({
-        "amount": income,
-        "category": category,
-        "date": datetime.now().strftime("%Y-%m-%d")
-    })
+@app.route("/add_transaction", methods=["POST"])
+def add_transaction():
+    t = {
+        "id": int(datetime.now().timestamp() * 1000),
+        "type": request.form.get("type"),
+        "amount": float(request.form.get("amount", 0)),
+        "label": request.form.get("label") or ("Income" if request.form.get("type") == "in" else "Expense"),
+        "date": datetime.now().strftime("%b %d")
+    }
+    data["transactions"].append(t)
     save_data()
     return redirect(url_for("index"))
 
-@app.route("/clear", methods=["POST"])
-def clear():
-    data["income"] = []
-    data["expenses"] = []
-    data["starting_balance"] = 0
+@app.route("/delete_transaction/<int:tid>", methods=["POST"])
+def delete_transaction(tid):
+    data["transactions"] = [t for t in data["transactions"] if t["id"] != tid]
     save_data()
     return redirect(url_for("index"))
 
-@app.route("/set_starting_balance", methods=["POST"])
-def set_starting_balance():
-    starting = float(request.form.get("starting_balance"))
-    data["starting_balance"] = starting
+@app.route("/add_bill", methods=["POST"])
+def add_bill():
+    bill = {
+        "id": int(datetime.now().timestamp() * 1000),
+        "name": request.form.get("bill_name"),
+        "amount": float(request.form.get("bill_amount", 0)),
+        "due_days": int(request.form.get("due_days", 30)),
+        "paid": False
+    }
+    data["bills"].append(bill)
+    save_data()
+    return redirect(url_for("index"))
+
+@app.route("/mark_paid/<int:bill_id>", methods=["POST"])
+def mark_paid(bill_id):
+    for b in data["bills"]:
+        if b["id"] == bill_id:
+            b["paid"] = not b.get("paid", False)
+            break
+    save_data()
+    return redirect(url_for("index"))
+
+@app.route("/delete_bill/<int:bill_id>", methods=["POST"])
+def delete_bill(bill_id):
+    data["bills"] = [b for b in data["bills"] if b["id"] != bill_id]
+    save_data()
+    return redirect(url_for("index"))
+
+@app.route("/clear_transactions", methods=["POST"])
+def clear_transactions():
+    data["transactions"] = []
+    data["cash"] = 0
     save_data()
     return redirect(url_for("index"))
 

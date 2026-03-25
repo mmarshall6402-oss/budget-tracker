@@ -1,5 +1,30 @@
 {
-  "starting_balance": 66.0,
+  "starting_balance": 0.0,
   "income": [],
-  "expenses": []
+  "expenses": [],
+  "bills": [
+    {
+      "id": 1774479651241,
+      "name": "Phone",
+      "amount": 110.0,
+      "due_days": 11,
+      "paid": false
+    },
+    {
+      "id": 1774479725622,
+      "name": "Light",
+      "amount": 136.0,
+      "due_days": 10,
+      "paid": false
+    },
+    {
+      "id": 1774479778365,
+      "name": "Ticket",
+      "amount": 190.0,
+      "due_days": 30,
+      "paid": false
+    }
+  ],
+  "cash": 0.0,
+  "transactions": []
 }
