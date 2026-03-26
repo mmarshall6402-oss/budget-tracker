@@ -2,161 +2,111 @@
 <html lang="en">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Budget">
+<meta name="theme-color" content="#0f1117">
 <title>Budget</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --bg:#0f1117;
-  --s1:#161b27;
-  --s2:#1e2535;
-  --s3:#252d3d;
-  --blue:#4d9ef7;
-  --blue-dim:#1a2d4a;
-  --blue-bright:#7bb8ff;
-  --red:#f76d6d;
-  --red-dim:#3d1f1f;
-  --amber:#f7c44d;
-  --amber-dim:#3d2e10;
-  --green:#4df7a0;
-  --green-dim:#0f3020;
-  --text:#e8edf5;
-  --muted:#5a6478;
-  --border:#232b3d;
-  --tab:60px;
+  --bg:#0f1117;--s1:#161b27;--s2:#1e2535;--s3:#252d3d;
+  --blue:#4d9ef7;--blue-dim:#1a2d4a;--blue-bright:#7bb8ff;
+  --red:#f76d6d;--red-dim:#3d1f1f;
+  --amber:#f7c44d;--amber-dim:#3d2e10;
+  --green:#4df7a0;--green-dim:#0f3020;
+  --purple:#b97ff7;--purple-dim:#2a1a4a;
+  --text:#e8edf5;--muted:#5a6478;--border:#232b3d;--tab:60px;
 }
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100dvh;overflow:hidden;display:flex;flex-direction:column;font-size:15px}
 
-body{
-  font-family:'Inter',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  height:100dvh;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  font-size:15px;
-}
-
-/* ── HEADER ── */
-.hdr{
-  background:var(--s1);
-  border-bottom:1px solid var(--border);
-  padding:14px 16px 12px;
-  flex-shrink:0;
-}
-
+/* HEADER */
+.hdr{background:var(--s1);border-bottom:1px solid var(--border);padding:14px 16px 12px;flex-shrink:0}
 .hdr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-
 .bal-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
 .bal-num{font-size:34px;font-weight:700;color:var(--blue-bright);letter-spacing:-.5px;line-height:1}
-
 .hdr-right{text-align:right;flex-shrink:0}
 .due-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
 .due-num{font-size:22px;font-weight:600;color:var(--amber)}
-
-.pill{
-  display:inline-block;
-  font-size:11px;font-weight:600;
-  padding:3px 10px;border-radius:20px;
-  margin-top:6px;
-}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:6px}
 .pill-red{background:var(--red-dim);color:var(--red)}
 .pill-green{background:var(--green-dim);color:var(--green)}
 
-/* ── PAGES ── */
-.pages{flex:1;overflow:hidden;position:relative}
-
-.page{
-  position:absolute;inset:0;bottom:var(--tab);
-  overflow-y:auto;padding:12px 12px 20px;
-  display:none;
-  -webkit-overflow-scrolling:touch;
-}
-.page.on{display:block}
-
-/* ── TABS ── */
-.tabs{
-  position:fixed;bottom:0;left:0;right:0;
-  height:var(--tab);
-  background:var(--s1);
-  border-top:1px solid var(--border);
-  display:flex;z-index:99;
-}
-.tab{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:2px;border:none;background:none;
-  color:var(--muted);font-size:10px;font-weight:500;
-  letter-spacing:.04em;text-transform:uppercase;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:color .15s;
-}
+/* TABS */
+.tabs{position:fixed;bottom:0;left:0;right:0;height:var(--tab);background:var(--s1);border-top:1px solid var(--border);display:flex;z-index:99}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;color:var(--muted);font-size:10px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .15s}
 .tab.on{color:var(--blue)}
 .tab svg{width:20px;height:20px;stroke-width:1.8}
 
-/* ── CARDS ── */
-.card{
-  background:var(--s1);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:10px;
-}
-.card-title{
-  font-size:10px;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.1em;
-  margin-bottom:10px;font-weight:600;
-}
+/* PAGES */
+.pages{flex:1;overflow:hidden;position:relative}
+.page{position:absolute;inset:0;bottom:var(--tab);overflow-y:auto;padding:12px 12px 20px;display:none;-webkit-overflow-scrolling:touch}
+.page.on{display:block}
 
-/* ── STAT GRID ── */
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px}
+.card-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;font-weight:600}
+
+/* STAT GRID */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .stat{background:var(--s2);border-radius:12px;padding:12px 14px;border:1px solid var(--border)}
 .stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
 .stat-val{font-size:20px;font-weight:700;letter-spacing:-.3px}
-.c-blue{color:var(--blue-bright)}
-.c-red{color:var(--red)}
-.c-amber{color:var(--amber)}
-.c-green{color:var(--green)}
-.c-muted{color:var(--muted)}
+.c-blue{color:var(--blue-bright)}.c-red{color:var(--red)}.c-amber{color:var(--amber)}.c-green{color:var(--green)}.c-muted{color:var(--muted)}.c-purple{color:var(--purple)}
 
-/* ── BILL ROW ── */
-.bill{
-  display:flex;align-items:center;
-  gap:10px;padding:10px 0;
-  border-bottom:1px solid var(--border);
-}
+/* SMART ALLOCATOR */
+.allocator{background:var(--purple-dim);border:1px solid var(--purple);border-radius:14px;padding:14px;margin-bottom:10px}
+.alloc-title{font-size:11px;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-bottom:10px}
+.alloc-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(185,127,247,.15)}
+.alloc-row:last-of-type{border-bottom:none}
+.alloc-name{font-size:13px;font-weight:500}
+.alloc-amt{font-size:13px;font-weight:700;color:var(--purple)}
+.alloc-leftover{font-size:12px;color:var(--muted);margin-top:8px}
+.btn-alloc{width:100%;padding:11px;background:var(--purple);color:#fff;font-weight:700;font-size:14px;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;margin-top:10px}
+
+/* BILL ROWS */
+.bill{display:flex;flex-direction:column;padding:12px 0;border-bottom:1px solid var(--border)}
 .bill:last-child{border-bottom:none;padding-bottom:0}
-
+.bill-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.d-red{background:var(--red)}
-.d-amber{background:var(--amber)}
-.d-blue{background:var(--blue)}
-.d-muted{background:var(--muted)}
-
+.d-red{background:var(--red)}.d-amber{background:var(--amber)}.d-blue{background:var(--blue)}.d-muted{background:var(--muted)}.d-green{background:var(--green)}
 .bill-info{flex:1;min-width:0}
-.bill-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bill-name{font-size:14px;font-weight:500}
 .bill-name.faded{color:var(--muted);text-decoration:line-through}
 .bill-sub{font-size:11px;color:var(--muted);margin-top:1px}
-
 .bill-r{text-align:right;flex-shrink:0}
-.bill-amt{font-size:14px;font-weight:700}
-.bill-btns{display:flex;gap:5px;margin-top:4px;justify-content:flex-end}
+.bill-amt{font-size:15px;font-weight:700}
+.bill-total{font-size:11px;color:var(--muted)}
 
-/* ── TX ROW ── */
-.tx{
-  display:flex;align-items:center;
-  gap:10px;padding:9px 0;
-  border-bottom:1px solid var(--border);
-}
+/* PROGRESS BAR */
+.prog-wrap{width:100%;height:5px;background:var(--s3);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.prog-bar{height:100%;border-radius:10px;transition:width .4s ease}
+.prog-blue{background:var(--blue)}
+.prog-green{background:var(--green)}
+.prog-amber{background:var(--amber)}
+
+/* PAY TOWARD */
+.pay-row{display:flex;gap:6px;align-items:center}
+.pay-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;padding:7px 10px;font-family:'Inter',sans-serif}
+.pay-input:focus{outline:none;border-color:var(--blue)}
+.btn-pay{padding:7px 14px;background:var(--blue);color:#fff;font-weight:600;font-size:13px;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif}
+.btn-del{padding:7px 10px;background:var(--red-dim);color:var(--red);border:1px solid var(--red);font-size:12px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* CAT BADGE */
+.cat-badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;margin-left:6px}
+.cat-household{background:var(--blue-dim);color:var(--blue)}
+.cat-phone{background:#1a3a2a;color:#4df7c0}
+.cat-debt{background:var(--red-dim);color:var(--red)}
+.cat-ticket{background:var(--amber-dim);color:var(--amber)}
+.cat-other{background:var(--s3);color:var(--muted)}
+
+/* TX */
+.tx{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
 .tx:last-child{border-bottom:none;padding-bottom:0}
-.tx-icon{
-  width:34px;height:34px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;flex-shrink:0;
-}
-.tx-in{background:var(--green-dim)}
-.tx-out{background:var(--red-dim)}
+.tx-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.tx-in{background:var(--green-dim)}.tx-out{background:var(--red-dim)}
 .tx-info{flex:1;min-width:0}
 .tx-label{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tx-date{font-size:11px;color:var(--muted)}
@@ -164,64 +114,24 @@ body{
 .tx-amt-in{font-size:14px;font-weight:700;color:var(--green)}
 .tx-amt-out{font-size:14px;font-weight:700;color:var(--red)}
 
-/* ── FORMS ── */
+/* FORMS */
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-
 .fld{margin-bottom:10px}
 .fld label{font-size:10px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-
-input[type=text],input[type=number],select{
-  width:100%;background:var(--s2);
-  border:1px solid var(--border);border-radius:10px;
-  color:var(--text);font-size:15px;
-  padding:10px 12px;font-family:'Inter',sans-serif;
-  -webkit-appearance:none;
-}
+input[type=text],input[type=number],select{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;padding:10px 12px;font-family:'Inter',sans-serif;-webkit-appearance:none}
 input:focus,select:focus{outline:none;border-color:var(--blue)}
-
-.btn{
-  width:100%;padding:13px;
-  background:var(--blue);color:#fff;
-  font-weight:600;font-size:15px;border:none;
-  border-radius:12px;cursor:pointer;
-  font-family:'Inter',sans-serif;
-}
-.btn-ghost{
-  background:transparent;color:var(--red);
-  border:1px solid var(--red);border-radius:12px;
-  width:100%;padding:11px;font-size:14px;
-  font-weight:600;cursor:pointer;
-  font-family:'Inter',sans-serif;
-}
-
-.btn-xs{
-  font-size:11px;padding:3px 10px;
-  border-radius:20px;border:1px solid var(--border);
-  background:var(--s3);color:var(--text);
-  cursor:pointer;font-family:'Inter',sans-serif;
-}
-.btn-xs.b{border-color:var(--blue);color:var(--blue)}
-.btn-xs.r{border-color:var(--red);color:var(--red)}
-
-.empty{color:var(--muted);font-size:13px;text-align:center;padding:18px 0}
-
-/* toggle for in/out */
+.btn{width:100%;padding:13px;background:var(--blue);color:#fff;font-weight:600;font-size:15px;border:none;border-radius:12px;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-ghost{background:transparent;color:var(--red);border:1px solid var(--red);border-radius:12px;width:100%;padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
 .type-toggle{display:flex;gap:8px;margin-bottom:12px}
-.type-btn{
-  flex:1;padding:10px;border-radius:10px;
-  border:1px solid var(--border);background:var(--s2);
-  color:var(--muted);font-weight:600;font-size:14px;
-  cursor:pointer;font-family:'Inter',sans-serif;
-  transition:all .15s;
-}
+.type-btn{flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--s2);color:var(--muted);font-weight:600;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
 .type-btn.sel-in{background:var(--green-dim);border-color:var(--green);color:var(--green)}
 .type-btn.sel-out{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+.empty{color:var(--muted);font-size:13px;text-align:center;padding:18px 0}
+select option{background:#1a1a1a}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="hdr">
   <div class="hdr-row">
     <div>
@@ -229,29 +139,27 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
       <div class="bal-num">${{ "%.0f"|format(balance) }}</div>
       {% if bills %}
         {% if shortfall < 0 %}
-        <span class="pill pill-red">⚠ ${{ "%.0f"|format(shortfall|abs) }} short on bills</span>
+        <span class="pill pill-red">⚠ ${{ "%.0f"|format(shortfall|abs) }} short</span>
         {% else %}
         <span class="pill pill-green">${{ "%.0f"|format(shortfall) }} left after bills</span>
         {% endif %}
       {% endif %}
     </div>
     <div class="hdr-right">
-      <div class="due-lbl">Bills due</div>
+      <div class="due-lbl">Still owe</div>
       <div class="due-num">${{ "%.0f"|format(upcoming_total) }}</div>
     </div>
   </div>
 </div>
 
-<!-- PAGES -->
 <div class="pages">
 
-  <!-- ── TODAY TAB ── -->
+  <!-- TODAY -->
   <div class="page on" id="pg-today">
 
-    <!-- mini stats -->
     <div class="stat-grid">
       <div class="stat">
-        <div class="stat-lbl">Cash in</div>
+        <div class="stat-lbl">Got paid</div>
         <div class="stat-val c-green">${{ "%.0f"|format(transactions | selectattr('type','eq','in') | sum(attribute='amount')) }}</div>
       </div>
       <div class="stat">
@@ -260,10 +168,28 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
       </div>
     </div>
 
-    <!-- add transaction -->
+    <!-- SMART ALLOCATOR -->
+    {% if allocations %}
+    <div class="allocator">
+      <div class="alloc-title">🧠 Smart — here's where your ${{ "%.0f"|format(balance) }} should go</div>
+      {% for a in allocations %}
+      <div class="alloc-row">
+        <span class="alloc-name">{{ a.name }}</span>
+        <span class="alloc-amt">${{ "%.0f"|format(a.pay) }}</span>
+      </div>
+      {% endfor %}
+      {% if leftover > 0 %}
+      <div class="alloc-leftover">${{ "%.0f"|format(leftover) }} left over after all bills</div>
+      {% endif %}
+      <form action="/apply_allocation" method="POST">
+        <button type="submit" class="btn-alloc">Apply this plan ↗</button>
+      </form>
+    </div>
+    {% endif %}
+
     <div class="card">
       <div class="card-title">Log money</div>
-      <form action="/add_transaction" method="POST" id="txform">
+      <form action="/add_transaction" method="POST">
         <input type="hidden" name="type" id="txtype" value="out">
         <div class="type-toggle">
           <button type="button" class="type-btn sel-out" id="btn-out" onclick="setType('out')">− Spent</button>
@@ -283,27 +209,20 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
       </form>
     </div>
 
-    <!-- recent transactions -->
     <div class="card">
       <div class="card-title">Recent</div>
-      {% for t in transactions[:15] %}
+      {% for t in transactions[:12] %}
       <div class="tx">
-        <div class="tx-icon {{ 'tx-in' if t.type == 'in' else 'tx-out' }}">
-          {{ '↑' if t.type == 'in' else '↓' }}
-        </div>
+        <div class="tx-icon {{ 'tx-in' if t.type == 'in' else 'tx-out' }}">{{ '↑' if t.type == 'in' else '↓' }}</div>
         <div class="tx-info">
           <div class="tx-label">{{ t.label }}</div>
           <div class="tx-date">{{ t.date }}</div>
         </div>
         <div class="tx-r">
-          <div class="{{ 'tx-amt-in' if t.type == 'in' else 'tx-amt-out' }}">
-            {{ '+' if t.type == 'in' else '-' }}${{ "%.0f"|format(t.amount) }}
-          </div>
-          <div style="margin-top:4px">
-            <form action="/delete_transaction/{{ t.id }}" method="POST" style="display:inline">
-              <button type="submit" class="btn-xs r">del</button>
-            </form>
-          </div>
+          <div class="{{ 'tx-amt-in' if t.type == 'in' else 'tx-amt-out' }}">{{ '+' if t.type == 'in' else '-' }}${{ "%.0f"|format(t.amount) }}</div>
+          <form action="/delete_transaction/{{ t.id }}" method="POST" style="margin-top:4px">
+            <button type="submit" style="font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);background:var(--s3);color:var(--muted);cursor:pointer">del</button>
+          </form>
         </div>
       </div>
       {% else %}
@@ -312,29 +231,54 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
     </div>
   </div>
 
-  <!-- ── BILLS TAB ── -->
+  <!-- BILLS -->
   <div class="page" id="pg-bills">
-
     <div class="card">
       <div class="card-title">What you owe</div>
       {% for b in bills %}
+      {% set rem = b_remaining(b) %}
+      {% set pct = ((b.amount - rem) / b.amount * 100) if b.amount > 0 else 0 %}
+      {% set done = rem <= 0 %}
       <div class="bill">
-        <div class="dot {{ 'd-muted' if b.paid else ('d-red' if b.due_days <= 5 else ('d-amber' if b.due_days <= 14 else 'd-blue')) }}"></div>
-        <div class="bill-info">
-          <div class="bill-name {{ 'faded' if b.paid }}">{{ b.name }}</div>
-          <div class="bill-sub">{% if b.paid %}paid{% else %}due in {{ b.due_days }}d{% endif %}</div>
-        </div>
-        <div class="bill-r">
-          <div class="bill-amt {{ 'c-muted' if b.paid else ('c-red' if b.due_days <= 5 else ('c-amber' if b.due_days <= 14 else 'c-blue')) }}">${{ "%.0f"|format(b.amount) }}</div>
-          <div class="bill-btns">
-            <form action="/mark_paid/{{ b.id }}" method="POST" style="display:inline">
-              <button class="btn-xs b">{{ 'undo' if b.paid else 'paid' }}</button>
-            </form>
-            <form action="/delete_bill/{{ b.id }}" method="POST" style="display:inline">
-              <button class="btn-xs r">del</button>
-            </form>
+        <div class="bill-top">
+          <div class="dot {{ 'd-muted' if done else ('d-red' if b.due_days <= 5 else ('d-amber' if b.due_days <= 14 else 'd-blue')) }}"></div>
+          <div class="bill-info">
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+              <span class="bill-name {{ 'faded' if done }}">{{ b.name }}</span>
+              <span class="cat-badge cat-{{ b.get('category','other') }}">{{ b.get('category','other') }}</span>
+            </div>
+            <div class="bill-sub">
+              {% if done %}paid off
+              {% elif b.has_due_date %}due in {{ b.due_days }}d
+              {% else %}no due date — pay when you can
+              {% endif %}
+            </div>
+          </div>
+          <div class="bill-r">
+            <div class="bill-amt {{ 'c-muted' if done else ('c-red' if b.due_days <= 5 and b.has_due_date else ('c-amber' if b.due_days <= 14 and b.has_due_date else 'c-blue')) }}">${{ "%.0f"|format(rem) }}</div>
+            <div class="bill-total">of ${{ "%.0f"|format(b.amount) }}</div>
           </div>
         </div>
+        <!-- progress bar -->
+        <div class="prog-wrap">
+          <div class="prog-bar {{ 'prog-green' if done else ('prog-amber' if pct > 0 else 'prog-blue') }}" style="width:{{ pct }}%"></div>
+        </div>
+        <!-- pay toward + delete -->
+        {% if not done %}
+        <form action="/pay_toward/{{ b.id }}" method="POST">
+          <div class="pay-row">
+            <input class="pay-input" type="number" name="amount" placeholder="Pay $..." step="0.01" min="0.01" max="{{ rem }}" required>
+            <button type="submit" class="btn-pay">Pay</button>
+            <form action="/delete_bill/{{ b.id }}" method="POST" style="display:inline">
+              <button type="submit" class="btn-del">del</button>
+            </form>
+          </div>
+        </form>
+        {% else %}
+        <form action="/delete_bill/{{ b.id }}" method="POST">
+          <button type="submit" class="btn-del" style="width:100%">Remove</button>
+        </form>
+        {% endif %}
       </div>
       {% else %}
       <div class="empty">No bills added yet</div>
@@ -346,16 +290,35 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
       <form action="/add_bill" method="POST">
         <div class="fld">
           <label>What is it?</label>
-          <input type="text" name="bill_name" placeholder="Phone bill, parking ticket…" required>
+          <input type="text" name="bill_name" placeholder="Light bill, parking ticket…" required>
         </div>
         <div class="row2">
           <div class="fld">
-            <label>Amount $</label>
+            <label>Total amount $</label>
             <input type="number" name="bill_amount" placeholder="0" step="0.01" required>
           </div>
           <div class="fld">
+            <label>Category</label>
+            <select name="category">
+              <option value="household">Household</option>
+              <option value="phone">Phone</option>
+              <option value="debt">Debt</option>
+              <option value="ticket">Ticket</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="fld">
+            <label>Has a due date?</label>
+            <select name="has_due_date" id="has-due" onchange="toggleDue()">
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+          <div class="fld" id="due-days-wrap">
             <label>Due in days</label>
-            <input type="number" name="due_days" placeholder="e.g. 7" required>
+            <input type="number" name="due_days" placeholder="e.g. 7" id="due-days-input">
           </div>
         </div>
         <button type="submit" class="btn">Add Bill</button>
@@ -363,7 +326,7 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
     </div>
   </div>
 
-  <!-- ── SETTINGS TAB ── -->
+  <!-- SETTINGS -->
   <div class="page" id="pg-settings">
     <div class="card">
       <div class="card-title">Starting cash</div>
@@ -375,7 +338,6 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
         <button type="submit" class="btn">Save</button>
       </form>
     </div>
-
     <div class="card">
       <div class="card-title">Reset</div>
       <form action="/clear_transactions" method="POST">
@@ -386,7 +348,6 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
 
 </div>
 
-<!-- BOTTOM TABS -->
 <div class="tabs">
   <button class="tab on" onclick="go('today',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -403,24 +364,21 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
 </div>
 
 <script>
-function go(name, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.getElementById('pg-' + name).classList.add('on');
+function go(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
   el.classList.add('on');
 }
-
-function setType(t) {
-  document.getElementById('txtype').value = t;
-  const bOut = document.getElementById('btn-out');
-  const bIn = document.getElementById('btn-in');
-  if (t === 'out') {
-    bOut.className = 'type-btn sel-out';
-    bIn.className = 'type-btn';
-  } else {
-    bIn.className = 'type-btn sel-in';
-    bOut.className = 'type-btn';
-  }
+function setType(t){
+  document.getElementById('txtype').value=t;
+  document.getElementById('btn-out').className='type-btn'+(t==='out'?' sel-out':'');
+  document.getElementById('btn-in').className='type-btn'+(t==='in'?' sel-in':'');
+}
+function toggleDue(){
+  const has=document.getElementById('has-due').value==='yes';
+  document.getElementById('due-days-wrap').style.opacity=has?'1':'0.3';
+  document.getElementById('due-days-input').required=has;
 }
 </script>
 </body>
