@@ -22,7 +22,6 @@
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100dvh;overflow:hidden;display:flex;flex-direction:column;font-size:15px}
 
-/* HEADER */
 .hdr{background:var(--s1);border-bottom:1px solid var(--border);padding:14px 16px 12px;flex-shrink:0}
 .hdr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .bal-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
@@ -34,29 +33,24 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .pill-red{background:var(--red-dim);color:var(--red)}
 .pill-green{background:var(--green-dim);color:var(--green)}
 
-/* TABS */
 .tabs{position:fixed;bottom:0;left:0;right:0;height:var(--tab);background:var(--s1);border-top:1px solid var(--border);display:flex;z-index:99}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;color:var(--muted);font-size:10px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .15s}
 .tab.on{color:var(--blue)}
 .tab svg{width:20px;height:20px;stroke-width:1.8}
 
-/* PAGES */
 .pages{flex:1;overflow:hidden;position:relative}
 .page{position:absolute;inset:0;bottom:var(--tab);overflow-y:auto;padding:12px 12px 20px;display:none;-webkit-overflow-scrolling:touch}
 .page.on{display:block}
 
-/* CARDS */
 .card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px}
 .card-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;font-weight:600}
 
-/* STAT GRID */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .stat{background:var(--s2);border-radius:12px;padding:12px 14px;border:1px solid var(--border)}
 .stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
 .stat-val{font-size:20px;font-weight:700;letter-spacing:-.3px}
 .c-blue{color:var(--blue-bright)}.c-red{color:var(--red)}.c-amber{color:var(--amber)}.c-green{color:var(--green)}.c-muted{color:var(--muted)}.c-purple{color:var(--purple)}
 
-/* SMART ALLOCATOR */
 .allocator{background:var(--purple-dim);border:1px solid var(--purple);border-radius:14px;padding:14px;margin-bottom:10px}
 .alloc-title{font-size:11px;color:var(--purple);text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-bottom:10px}
 .alloc-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(185,127,247,.15)}
@@ -66,12 +60,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .alloc-leftover{font-size:12px;color:var(--muted);margin-top:8px}
 .btn-alloc{width:100%;padding:11px;background:var(--purple);color:#fff;font-weight:700;font-size:14px;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;margin-top:10px}
 
-/* BILL ROWS */
-.bill{display:flex;flex-direction:column;padding:12px 0;border-bottom:1px solid var(--border)}
+/* BILL */
+.bill{padding:12px 0;border-bottom:1px solid var(--border)}
 .bill:last-child{border-bottom:none;padding-bottom:0}
 .bill-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.d-red{background:var(--red)}.d-amber{background:var(--amber)}.d-blue{background:var(--blue)}.d-muted{background:var(--muted)}.d-green{background:var(--green)}
+.d-red{background:var(--red)}.d-amber{background:var(--amber)}.d-blue{background:var(--blue)}.d-muted{background:var(--muted)}
 .bill-info{flex:1;min-width:0}
 .bill-name{font-size:14px;font-weight:500}
 .bill-name.faded{color:var(--muted);text-decoration:line-through}
@@ -80,22 +74,34 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .bill-amt{font-size:15px;font-weight:700}
 .bill-total{font-size:11px;color:var(--muted)}
 
-/* PROGRESS BAR */
-.prog-wrap{width:100%;height:5px;background:var(--s3);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.prog-wrap{width:100%;height:5px;background:var(--s3);border-radius:10px;margin-bottom:10px;overflow:hidden}
 .prog-bar{height:100%;border-radius:10px;transition:width .4s ease}
-.prog-blue{background:var(--blue)}
-.prog-green{background:var(--green)}
-.prog-amber{background:var(--amber)}
+.prog-blue{background:var(--blue)}.prog-green{background:var(--green)}.prog-amber{background:var(--amber)}
 
-/* PAY TOWARD */
+/* bill action buttons row */
+.bill-actions{display:flex;gap:6px;margin-bottom:8px}
+.btn-sm{padding:7px 0;font-size:12px;font-weight:600;border:none;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;flex:1;text-align:center}
+.btn-pay-sm{background:var(--blue);color:#fff}
+.btn-edit-sm{background:var(--s3);color:var(--text);border:1px solid var(--border)}
+.btn-del-sm{background:var(--red-dim);color:var(--red);border:1px solid var(--red)}
+
+/* pay input row */
 .pay-row{display:flex;gap:6px;align-items:center}
-.pay-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;padding:7px 10px;font-family:'Inter',sans-serif}
+.pay-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;padding:8px 10px;font-family:'Inter',sans-serif}
 .pay-input:focus{outline:none;border-color:var(--blue)}
-.btn-pay{padding:7px 14px;background:var(--blue);color:#fff;font-weight:600;font-size:13px;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif}
-.btn-del{padding:7px 10px;background:var(--red-dim);color:var(--red);border:1px solid var(--red);font-size:12px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-confirm{padding:8px 14px;background:var(--blue);color:#fff;font-weight:600;font-size:13px;border:none;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-cancel{padding:8px 10px;background:var(--s3);color:var(--muted);font-size:12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif}
 
-/* CAT BADGE */
-.cat-badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;margin-left:6px}
+/* edit panel */
+.edit-panel{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:6px;display:none}
+.edit-panel.open{display:block}
+.ep-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.ep-fld label{font-size:10px;color:var(--muted);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.ep-fld input,.ep-fld select{width:100%;background:var(--s3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;padding:8px 10px;font-family:'Inter',sans-serif;-webkit-appearance:none}
+.ep-fld input:focus,.ep-fld select:focus{outline:none;border-color:var(--blue)}
+.ep-btns{display:flex;gap:6px}
+
+.cat-badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;margin-left:4px}
 .cat-household{background:var(--blue-dim);color:var(--blue)}
 .cat-phone{background:#1a3a2a;color:#4df7c0}
 .cat-debt{background:var(--red-dim);color:var(--red)}
@@ -110,9 +116,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .tx-info{flex:1;min-width:0}
 .tx-label{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tx-date{font-size:11px;color:var(--muted)}
-.tx-r{text-align:right;flex-shrink:0}
+.tx-r{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 .tx-amt-in{font-size:14px;font-weight:700;color:var(--green)}
 .tx-amt-out{font-size:14px;font-weight:700;color:var(--red)}
+.btn-del-tx{font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);background:var(--s3);color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif}
 
 /* FORMS */
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -156,7 +163,6 @@ select option{background:#1a1a1a}
 
   <!-- TODAY -->
   <div class="page on" id="pg-today">
-
     <div class="stat-grid">
       <div class="stat">
         <div class="stat-lbl">Got paid</div>
@@ -168,7 +174,6 @@ select option{background:#1a1a1a}
       </div>
     </div>
 
-    <!-- SMART ALLOCATOR -->
     {% if allocations %}
     <div class="allocator">
       <div class="alloc-title">🧠 Smart — here's where your ${{ "%.0f"|format(balance) }} should go</div>
@@ -210,8 +215,8 @@ select option{background:#1a1a1a}
     </div>
 
     <div class="card">
-      <div class="card-title">Recent</div>
-      {% for t in transactions[:12] %}
+      <div class="card-title">Recent transactions</div>
+      {% for t in transactions[:15] %}
       <div class="tx">
         <div class="tx-icon {{ 'tx-in' if t.type == 'in' else 'tx-out' }}">{{ '↑' if t.type == 'in' else '↓' }}</div>
         <div class="tx-info">
@@ -220,8 +225,8 @@ select option{background:#1a1a1a}
         </div>
         <div class="tx-r">
           <div class="{{ 'tx-amt-in' if t.type == 'in' else 'tx-amt-out' }}">{{ '+' if t.type == 'in' else '-' }}${{ "%.0f"|format(t.amount) }}</div>
-          <form action="/delete_transaction/{{ t.id }}" method="POST" style="margin-top:4px">
-            <button type="submit" style="font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);background:var(--s3);color:var(--muted);cursor:pointer">del</button>
+          <form action="/delete_transaction/{{ t.id }}" method="POST">
+            <button type="submit" class="btn-del-tx">del</button>
           </form>
         </div>
       </div>
@@ -241,7 +246,7 @@ select option{background:#1a1a1a}
       {% set done = rem <= 0 %}
       <div class="bill">
         <div class="bill-top">
-          <div class="dot {{ 'd-muted' if done else ('d-red' if b.due_days <= 5 else ('d-amber' if b.due_days <= 14 else 'd-blue')) }}"></div>
+          <div class="dot {{ 'd-muted' if done else ('d-red' if b.due_days <= 5 and b.has_due_date else ('d-amber' if b.due_days <= 14 and b.has_due_date else 'd-blue')) }}"></div>
           <div class="bill-info">
             <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
               <span class="bill-name {{ 'faded' if done }}">{{ b.name }}</span>
@@ -250,7 +255,7 @@ select option{background:#1a1a1a}
             <div class="bill-sub">
               {% if done %}paid off
               {% elif b.has_due_date %}due in {{ b.due_days }}d
-              {% else %}no due date — pay when you can
+              {% else %}no due date
               {% endif %}
             </div>
           </div>
@@ -259,24 +264,77 @@ select option{background:#1a1a1a}
             <div class="bill-total">of ${{ "%.0f"|format(b.amount) }}</div>
           </div>
         </div>
-        <!-- progress bar -->
+
         <div class="prog-wrap">
           <div class="prog-bar {{ 'prog-green' if done else ('prog-amber' if pct > 0 else 'prog-blue') }}" style="width:{{ pct }}%"></div>
         </div>
-        <!-- pay toward + delete -->
+
         {% if not done %}
-        <form action="/pay_toward/{{ b.id }}" method="POST">
-          <div class="pay-row">
-            <input class="pay-input" type="number" name="amount" placeholder="Pay $..." step="0.01" min="0.01" max="{{ rem }}" required>
-            <button type="submit" class="btn-pay">Pay</button>
-            <form action="/delete_bill/{{ b.id }}" method="POST" style="display:inline">
-              <button type="submit" class="btn-del">del</button>
-            </form>
-          </div>
-        </form>
+        <!-- action buttons -->
+        <div class="bill-actions">
+          <button class="btn-sm btn-pay-sm" onclick="showPay('{{ b.id }}')">Pay toward</button>
+          <button class="btn-sm btn-edit-sm" onclick="showEdit('{{ b.id }}')">Edit</button>
+          <form action="/delete_bill/{{ b.id }}" method="POST" style="flex:1">
+            <button type="submit" class="btn-sm btn-del-sm" style="width:100%">Delete</button>
+          </form>
+        </div>
+
+        <!-- pay panel -->
+        <div id="pay-{{ b.id }}" style="display:none;margin-bottom:8px">
+          <form action="/pay_toward/{{ b.id }}" method="POST">
+            <div class="pay-row">
+              <input class="pay-input" type="number" name="amount" placeholder="How much are you paying? $" step="0.01" min="0.01" required>
+              <button type="submit" class="btn-confirm">Pay</button>
+              <button type="button" class="btn-cancel" onclick="hidePay('{{ b.id }}')">✕</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- edit panel -->
+        <div id="edit-{{ b.id }}" class="edit-panel">
+          <form action="/edit_bill/{{ b.id }}" method="POST">
+            <div class="ep-row">
+              <div class="ep-fld">
+                <label>Name</label>
+                <input type="text" name="name" value="{{ b.name }}" required>
+              </div>
+              <div class="ep-fld">
+                <label>Total $</label>
+                <input type="number" name="amount" value="{{ b.amount }}" step="0.01" required>
+              </div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-fld">
+                <label>Category</label>
+                <select name="category">
+                  <option value="household" {{ 'selected' if b.get('category')=='household' }}>Household</option>
+                  <option value="phone" {{ 'selected' if b.get('category')=='phone' }}>Phone</option>
+                  <option value="debt" {{ 'selected' if b.get('category')=='debt' }}>Debt</option>
+                  <option value="ticket" {{ 'selected' if b.get('category')=='ticket' }}>Ticket</option>
+                  <option value="other" {{ 'selected' if b.get('category','other')=='other' }}>Other</option>
+                </select>
+              </div>
+              <div class="ep-fld">
+                <label>Has due date?</label>
+                <select name="has_due_date" onchange="toggleEditDue('{{ b.id }}', this.value)">
+                  <option value="yes" {{ 'selected' if b.has_due_date }}>Yes</option>
+                  <option value="no" {{ 'selected' if not b.has_due_date }}>No</option>
+                </select>
+              </div>
+            </div>
+            <div class="ep-fld" id="editdue-{{ b.id }}" style="{{ 'display:none' if not b.has_due_date }}">
+              <label>Due in days</label>
+              <input type="number" name="due_days" value="{{ b.due_days if b.has_due_date else '' }}" placeholder="e.g. 7">
+            </div>
+            <div class="ep-btns" style="margin-top:8px">
+              <button type="submit" class="btn-confirm" style="flex:1">Save</button>
+              <button type="button" class="btn-cancel" onclick="hideEdit('{{ b.id }}')">Cancel</button>
+            </div>
+          </form>
+        </div>
         {% else %}
         <form action="/delete_bill/{{ b.id }}" method="POST">
-          <button type="submit" class="btn-del" style="width:100%">Remove</button>
+          <button type="submit" class="btn-sm btn-del-sm" style="width:100%">Remove</button>
         </form>
         {% endif %}
       </div>
@@ -294,7 +352,7 @@ select option{background:#1a1a1a}
         </div>
         <div class="row2">
           <div class="fld">
-            <label>Total amount $</label>
+            <label>Total $</label>
             <input type="number" name="bill_amount" placeholder="0" step="0.01" required>
           </div>
           <div class="fld">
@@ -310,7 +368,7 @@ select option{background:#1a1a1a}
         </div>
         <div class="row2">
           <div class="fld">
-            <label>Has a due date?</label>
+            <label>Has due date?</label>
             <select name="has_due_date" id="has-due" onchange="toggleDue()">
               <option value="yes">Yes</option>
               <option value="no">No</option>
@@ -318,7 +376,7 @@ select option{background:#1a1a1a}
           </div>
           <div class="fld" id="due-days-wrap">
             <label>Due in days</label>
-            <input type="number" name="due_days" placeholder="e.g. 7" id="due-days-input">
+            <input type="number" name="due_days" id="due-days-input" placeholder="e.g. 7">
           </div>
         </div>
         <button type="submit" class="btn">Add Bill</button>
@@ -375,10 +433,23 @@ function setType(t){
   document.getElementById('btn-out').className='type-btn'+(t==='out'?' sel-out':'');
   document.getElementById('btn-in').className='type-btn'+(t==='in'?' sel-in':'');
 }
+function showPay(id){
+  document.getElementById('pay-'+id).style.display='block';
+  hideEdit(id);
+}
+function hidePay(id){document.getElementById('pay-'+id).style.display='none'}
+function showEdit(id){
+  document.getElementById('edit-'+id).classList.add('open');
+  hidePay(id);
+}
+function hideEdit(id){document.getElementById('edit-'+id).classList.remove('open')}
 function toggleDue(){
   const has=document.getElementById('has-due').value==='yes';
-  document.getElementById('due-days-wrap').style.opacity=has?'1':'0.3';
+  document.getElementById('due-days-wrap').style.opacity=has?'1':'0.4';
   document.getElementById('due-days-input').required=has;
+}
+function toggleEditDue(id,val){
+  document.getElementById('editdue-'+id).style.display=val==='yes'?'block':'none';
 }
 </script>
 </body>
