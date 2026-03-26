@@ -1,41 +1,72 @@
 from flask import Flask, render_template, request, redirect, url_for
-import json
+from datetime import datetime, date
 import os
-from datetime import datetime
+import requests
 
 app = Flask(__name__)
-DATA_FILE = "budget.json"
+
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://eqfostfkvngrlsrpndhh.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVxZm9zdGZrdm5ncmxzcnBuZGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1Mjk5NTUsImV4cCI6MjA5MDEwNTk1NX0.1wKu1OCIhAoAA-OlOqIJ0q9zYcWyoVLlbijh68mwwEU")
+
+HEADERS = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": f"Bearer {SUPABASE_KEY}",
+    "Content-Type": "application/json",
+    "Prefer": "return=minimal"
+}
 
 PRIORITY = {"household": 1, "phone": 2, "debt": 3, "ticket": 4, "other": 5}
 
-if os.path.exists(DATA_FILE):
-    with open(DATA_FILE, "r") as f:
-        data = json.load(f)
-else:
-    data = {"cash": 0, "transactions": [], "bills": []}
+def db_get(table, order=None):
+    url = f"{SUPABASE_URL}/rest/v1/{table}?select=*"
+    if order:
+        url += f"&order={order}"
+    r = requests.get(url, headers=HEADERS)
+    return r.json() if r.ok else []
 
-for key in ["cash", "transactions", "bills"]:
-    if key not in data:
-        data[key] = [] if key != "cash" else 0
+def db_insert(table, row):
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
+    requests.post(url, json=row, headers=HEADERS)
 
-def save_data():
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=2)
+def db_update(table, match_col, match_val, updates):
+    url = f"{SUPABASE_URL}/rest/v1/{table}?{match_col}=eq.{match_val}"
+    requests.patch(url, json=updates, headers=HEADERS)
 
-def get_balance():
-    total_in = sum(t["amount"] for t in data["transactions"] if t["type"] == "in")
-    total_out = sum(t["amount"] for t in data["transactions"] if t["type"] == "out")
-    return data["cash"] + total_in - total_out
+def db_delete(table, match_col, match_val):
+    url = f"{SUPABASE_URL}/rest/v1/{table}?{match_col}=eq.{match_val}"
+    requests.delete(url, headers=HEADERS)
 
-def get_upcoming_total():
-    return sum(b_remaining(b) for b in data["bills"] if b_remaining(b) > 0)
+def get_cash():
+    rows = db_get("settings")
+    for r in rows:
+        if r["key"] == "cash":
+            return float(r["value"])
+    return 0.0
+
+def set_cash_db(amount):
+    db_update("settings", "key", "cash", {"value": amount})
+
+def get_balance(transactions, cash):
+    total_in = sum(t["amount"] for t in transactions if t["type"] == "in")
+    total_out = sum(t["amount"] for t in transactions if t["type"] == "out")
+    return cash + total_in - total_out
 
 def b_remaining(bill):
     return bill.get("remaining", bill["amount"])
 
-def smart_allocate(amount):
+def calc_due_days(due_date_str):
+    try:
+        due = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+        return max(0, (due - date.today()).days)
+    except:
+        return 999
+
+def get_upcoming_total(bills):
+    return sum(b_remaining(b) for b in bills if b_remaining(b) > 0)
+
+def smart_allocate(bills, amount):
     unpaid = sorted(
-        [b for b in data["bills"] if b_remaining(b) > 0],
+        [b for b in bills if b_remaining(b) > 0],
         key=lambda b: (PRIORITY.get(b.get("category", "other"), 5), b.get("due_days", 999))
     )
     allocations = []
@@ -46,27 +77,38 @@ def smart_allocate(amount):
         owed = b_remaining(bill)
         pay = min(owed, remaining)
         if pay > 0:
-            allocations.append({"bill_id": bill["id"], "name": bill["name"], "pay": round(pay, 2), "owed": round(owed, 2)})
+            allocations.append({"bill_id": bill["id"], "name": bill["name"], "pay": round(pay, 2)})
             remaining -= pay
     return allocations, round(remaining, 2)
 
 @app.route("/")
 def index():
-    balance = get_balance()
-    upcoming_total = get_upcoming_total()
-    shortfall = balance - upcoming_total
-    bills = sorted(data["bills"],
+    transactions = db_get("transactions", order="id.desc")
+    bills_raw = db_get("bills")
+    cash = get_cash()
+
+    # recalc due_days from due_date if present
+    bills = []
+    for b in bills_raw:
+        if b.get("due_date"):
+            b["due_days"] = calc_due_days(b["due_date"])
+        bills.append(b)
+
+    bills = sorted(bills,
         key=lambda b: (1 if b_remaining(b) <= 0 else 0,
                        PRIORITY.get(b.get("category", "other"), 5),
                        b.get("due_days", 999)))
-    recent = list(reversed(data["transactions"][-30:]))
-    allocations, leftover = smart_allocate(balance) if balance > 0 else ([], 0)
+
+    balance = get_balance(transactions, cash)
+    upcoming_total = get_upcoming_total(bills)
+    shortfall = balance - upcoming_total
+    allocations, leftover = smart_allocate(bills, balance) if balance > 0 else ([], 0)
+    recent = transactions[:30]
+
     return render_template("index.html",
-        balance=balance,
-        cash=data["cash"],
+        balance=balance, cash=cash,
         upcoming_total=upcoming_total,
-        shortfall=shortfall,
-        bills=bills,
+        shortfall=shortfall, bills=bills,
         transactions=recent,
         allocations=allocations,
         leftover=leftover,
@@ -74,8 +116,7 @@ def index():
 
 @app.route("/set_cash", methods=["POST"])
 def set_cash():
-    data["cash"] = float(request.form.get("cash", 0))
-    save_data()
+    set_cash_db(float(request.form.get("cash", 0)))
     return redirect(url_for("index"))
 
 @app.route("/add_transaction", methods=["POST"])
@@ -87,62 +128,68 @@ def add_transaction():
         "label": request.form.get("label") or ("Income" if request.form.get("type") == "in" else "Expense"),
         "date": datetime.now().strftime("%b %d")
     }
-    data["transactions"].append(t)
-    save_data()
+    db_insert("transactions", t)
     return redirect(url_for("index"))
 
 @app.route("/delete_transaction/<int:tid>", methods=["POST"])
 def delete_transaction(tid):
-    data["transactions"] = [t for t in data["transactions"] if t["id"] != tid]
-    save_data()
+    db_delete("transactions", "id", tid)
     return redirect(url_for("index"))
 
 @app.route("/add_bill", methods=["POST"])
 def add_bill():
     amount = float(request.form.get("bill_amount", 0))
     has_due = request.form.get("has_due_date") == "yes"
-    due_days = int(request.form.get("due_days") or 999) if has_due else 999
+    due_date = request.form.get("due_date", "") if has_due else ""
+    due_days = calc_due_days(due_date) if due_date else 999
     bill = {
         "id": int(datetime.now().timestamp() * 1000),
         "name": request.form.get("bill_name"),
         "amount": amount,
         "remaining": amount,
         "due_days": due_days,
+        "due_date": due_date,
         "has_due_date": has_due,
         "category": request.form.get("category", "other"),
         "paid_toward": 0
     }
-    data["bills"].append(bill)
-    save_data()
+    db_insert("bills", bill)
     return redirect(url_for("index"))
 
 @app.route("/edit_bill/<int:bill_id>", methods=["POST"])
 def edit_bill(bill_id):
-    for b in data["bills"]:
+    bills = db_get("bills")
+    for b in bills:
         if b["id"] == bill_id:
-            b["name"] = request.form.get("name", b["name"])
             new_amt = float(request.form.get("amount", b["amount"]))
-            # adjust remaining by the difference if amount changed
             diff = new_amt - b["amount"]
-            b["amount"] = new_amt
-            b["remaining"] = max(0, b_remaining(b) + diff)
             has_due = request.form.get("has_due_date") == "yes"
-            b["has_due_date"] = has_due
-            b["due_days"] = int(request.form.get("due_days") or 999) if has_due else 999
-            b["category"] = request.form.get("category", b.get("category", "other"))
+            due_date = request.form.get("due_date", "") if has_due else ""
+            due_days = calc_due_days(due_date) if due_date else 999
+            db_update("bills", "id", bill_id, {
+                "name": request.form.get("name", b["name"]),
+                "amount": new_amt,
+                "remaining": max(0, b_remaining(b) + diff),
+                "has_due_date": has_due,
+                "due_date": due_date,
+                "due_days": due_days,
+                "category": request.form.get("category", b.get("category", "other"))
+            })
             break
-    save_data()
     return redirect(url_for("index"))
 
 @app.route("/pay_toward/<int:bill_id>", methods=["POST"])
 def pay_toward(bill_id):
     amount = float(request.form.get("amount", 0))
-    for b in data["bills"]:
+    bills = db_get("bills")
+    for b in bills:
         if b["id"] == bill_id:
             actual_pay = min(amount, b_remaining(b))
-            b["remaining"] = max(0, b_remaining(b) - actual_pay)
-            b["paid_toward"] = b.get("paid_toward", 0) + actual_pay
-            data["transactions"].append({
+            db_update("bills", "id", bill_id, {
+                "remaining": max(0, b_remaining(b) - actual_pay),
+                "paid_toward": b.get("paid_toward", 0) + actual_pay
+            })
+            db_insert("transactions", {
                 "id": int(datetime.now().timestamp() * 1000),
                 "type": "out",
                 "amount": actual_pay,
@@ -150,19 +197,28 @@ def pay_toward(bill_id):
                 "date": datetime.now().strftime("%b %d")
             })
             break
-    save_data()
     return redirect(url_for("index"))
 
 @app.route("/apply_allocation", methods=["POST"])
 def apply_allocation():
-    balance = get_balance()
-    allocations, _ = smart_allocate(balance)
+    transactions = db_get("transactions")
+    bills_raw = db_get("bills")
+    cash = get_cash()
+    bills = []
+    for b in bills_raw:
+        if b.get("due_date"):
+            b["due_days"] = calc_due_days(b["due_date"])
+        bills.append(b)
+    balance = get_balance(transactions, cash)
+    allocations, _ = smart_allocate(bills, balance)
     for alloc in allocations:
-        for b in data["bills"]:
+        for b in bills:
             if b["id"] == alloc["bill_id"]:
-                b["remaining"] = max(0, b_remaining(b) - alloc["pay"])
-                b["paid_toward"] = b.get("paid_toward", 0) + alloc["pay"]
-                data["transactions"].append({
+                db_update("bills", "id", b["id"], {
+                    "remaining": max(0, b_remaining(b) - alloc["pay"]),
+                    "paid_toward": b.get("paid_toward", 0) + alloc["pay"]
+                })
+                db_insert("transactions", {
                     "id": int(datetime.now().timestamp() * 1000),
                     "type": "out",
                     "amount": alloc["pay"],
@@ -170,20 +226,18 @@ def apply_allocation():
                     "date": datetime.now().strftime("%b %d")
                 })
                 break
-    save_data()
     return redirect(url_for("index"))
 
 @app.route("/delete_bill/<int:bill_id>", methods=["POST"])
 def delete_bill(bill_id):
-    data["bills"] = [b for b in data["bills"] if b["id"] != bill_id]
-    save_data()
+    db_delete("bills", "id", bill_id)
     return redirect(url_for("index"))
 
 @app.route("/clear_transactions", methods=["POST"])
 def clear_transactions():
-    data["transactions"] = []
-    data["cash"] = 0
-    save_data()
+    url = f"{SUPABASE_URL}/rest/v1/transactions?id=gte.0"
+    requests.delete(url, headers=HEADERS)
+    set_cash_db(0)
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
