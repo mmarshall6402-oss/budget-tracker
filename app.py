@@ -22,19 +22,25 @@ def db_get(table, order=None):
     if order:
         url += f"&order={order}"
     r = requests.get(url, headers=HEADERS)
-    return r.json() if r.ok else []
+    try:
+        return r.json() if r.ok else []
+    except:
+        return []
 
 def db_insert(table, row):
     url = f"{SUPABASE_URL}/rest/v1/{table}"
-    requests.post(url, json=row, headers=HEADERS)
+    r = requests.post(url, json=row, headers=HEADERS)
+    return r.ok
 
 def db_update(table, match_col, match_val, updates):
     url = f"{SUPABASE_URL}/rest/v1/{table}?{match_col}=eq.{match_val}"
-    requests.patch(url, json=updates, headers=HEADERS)
+    r = requests.patch(url, json=updates, headers=HEADERS)
+    return r.ok
 
 def db_delete(table, match_col, match_val):
     url = f"{SUPABASE_URL}/rest/v1/{table}?{match_col}=eq.{match_val}"
-    requests.delete(url, headers=HEADERS)
+    r = requests.delete(url, headers=HEADERS)
+    return r.ok
 
 def get_cash():
     rows = db_get("settings")
@@ -52,14 +58,25 @@ def get_balance(transactions, cash):
     return cash + total_in - total_out
 
 def b_remaining(bill):
-    return bill.get("remaining", bill["amount"])
+    return float(bill.get("remaining") or bill.get("amount") or 0)
 
 def calc_due_days(due_date_str):
+    if not due_date_str:
+        return 999
     try:
         due = datetime.strptime(due_date_str, "%Y-%m-%d").date()
         return max(0, (due - date.today()).days)
     except:
         return 999
+
+def fmt_due_date(due_date_str):
+    if not due_date_str:
+        return ""
+    try:
+        due = datetime.strptime(due_date_str, "%Y-%m-%d")
+        return due.strftime("%b %d")
+    except:
+        return ""
 
 def get_upcoming_total(bills):
     return sum(b_remaining(b) for b in bills if b_remaining(b) > 0)
@@ -87,11 +104,14 @@ def index():
     bills_raw = db_get("bills")
     cash = get_cash()
 
-    # recalc due_days from due_date if present
     bills = []
     for b in bills_raw:
         if b.get("due_date"):
             b["due_days"] = calc_due_days(b["due_date"])
+            b["due_date_fmt"] = fmt_due_date(b["due_date"])
+        else:
+            b["due_days"] = 999
+            b["due_date_fmt"] = ""
         bills.append(b)
 
     bills = sorted(bills,
@@ -140,7 +160,7 @@ def delete_transaction(tid):
 def add_bill():
     amount = float(request.form.get("bill_amount", 0))
     has_due = request.form.get("has_due_date") == "yes"
-    due_date = request.form.get("due_date", "") if has_due else ""
+    due_date = request.form.get("due_date", "").strip() if has_due else ""
     due_days = calc_due_days(due_date) if due_date else 999
     bill = {
         "id": int(datetime.now().timestamp() * 1000),
@@ -162,9 +182,9 @@ def edit_bill(bill_id):
     for b in bills:
         if b["id"] == bill_id:
             new_amt = float(request.form.get("amount", b["amount"]))
-            diff = new_amt - b["amount"]
+            diff = new_amt - float(b["amount"])
             has_due = request.form.get("has_due_date") == "yes"
-            due_date = request.form.get("due_date", "") if has_due else ""
+            due_date = request.form.get("due_date", "").strip() if has_due else ""
             due_days = calc_due_days(due_date) if due_date else 999
             db_update("bills", "id", bill_id, {
                 "name": request.form.get("name", b["name"]),
@@ -187,7 +207,7 @@ def pay_toward(bill_id):
             actual_pay = min(amount, b_remaining(b))
             db_update("bills", "id", bill_id, {
                 "remaining": max(0, b_remaining(b) - actual_pay),
-                "paid_toward": b.get("paid_toward", 0) + actual_pay
+                "paid_toward": float(b.get("paid_toward") or 0) + actual_pay
             })
             db_insert("transactions", {
                 "id": int(datetime.now().timestamp() * 1000),
@@ -208,6 +228,8 @@ def apply_allocation():
     for b in bills_raw:
         if b.get("due_date"):
             b["due_days"] = calc_due_days(b["due_date"])
+        else:
+            b["due_days"] = 999
         bills.append(b)
     balance = get_balance(transactions, cash)
     allocations, _ = smart_allocate(bills, balance)
@@ -216,7 +238,7 @@ def apply_allocation():
             if b["id"] == alloc["bill_id"]:
                 db_update("bills", "id", b["id"], {
                     "remaining": max(0, b_remaining(b) - alloc["pay"]),
-                    "paid_toward": b.get("paid_toward", 0) + alloc["pay"]
+                    "paid_toward": float(b.get("paid_toward") or 0) + alloc["pay"]
                 })
                 db_insert("transactions", {
                     "id": int(datetime.now().timestamp() * 1000),

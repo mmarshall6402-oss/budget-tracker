@@ -60,7 +60,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .alloc-leftover{font-size:12px;color:var(--muted);margin-top:8px}
 .btn-alloc{width:100%;padding:11px;background:var(--purple);color:#fff;font-weight:700;font-size:14px;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;margin-top:10px}
 
-/* BILL */
 .bill{padding:12px 0;border-bottom:1px solid var(--border)}
 .bill:last-child{border-bottom:none;padding-bottom:0}
 .bill-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
@@ -78,21 +77,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .prog-bar{height:100%;border-radius:10px;transition:width .4s ease}
 .prog-blue{background:var(--blue)}.prog-green{background:var(--green)}.prog-amber{background:var(--amber)}
 
-/* bill action buttons row */
 .bill-actions{display:flex;gap:6px;margin-bottom:8px}
-.btn-sm{padding:7px 0;font-size:12px;font-weight:600;border:none;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;flex:1;text-align:center}
+.btn-sm{padding:8px 0;font-size:12px;font-weight:600;border:none;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;flex:1;text-align:center}
 .btn-pay-sm{background:var(--blue);color:#fff}
 .btn-edit-sm{background:var(--s3);color:var(--text);border:1px solid var(--border)}
 .btn-del-sm{background:var(--red-dim);color:var(--red);border:1px solid var(--red)}
 
-/* pay input row */
 .pay-row{display:flex;gap:6px;align-items:center}
 .pay-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;padding:8px 10px;font-family:'Inter',sans-serif}
 .pay-input:focus{outline:none;border-color:var(--blue)}
 .btn-confirm{padding:8px 14px;background:var(--blue);color:#fff;font-weight:600;font-size:13px;border:none;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif}
 .btn-cancel{padding:8px 10px;background:var(--s3);color:var(--muted);font-size:12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif}
 
-/* edit panel */
 .edit-panel{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:6px;display:none}
 .edit-panel.open{display:block}
 .ep-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
@@ -108,7 +104,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .cat-ticket{background:var(--amber-dim);color:var(--amber)}
 .cat-other{background:var(--s3);color:var(--muted)}
 
-/* TX */
 .tx{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
 .tx:last-child{border-bottom:none;padding-bottom:0}
 .tx-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
@@ -121,11 +116,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .tx-amt-out{font-size:14px;font-weight:700;color:var(--red)}
 .btn-del-tx{font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);background:var(--s3);color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif}
 
-/* FORMS */
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .fld{margin-bottom:10px}
 .fld label{font-size:10px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-input[type=text],input[type=number],select{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;padding:10px 12px;font-family:'Inter',sans-serif;-webkit-appearance:none}
+input[type=text],input[type=number],input[type=date],select{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;padding:10px 12px;font-family:'Inter',sans-serif;-webkit-appearance:none}
+input[type=date]{color-scheme:dark}
 input:focus,select:focus{outline:none;border-color:var(--blue)}
 .btn{width:100%;padding:13px;background:var(--blue);color:#fff;font-weight:600;font-size:15px;border:none;border-radius:12px;cursor:pointer;font-family:'Inter',sans-serif}
 .btn-ghost{background:transparent;color:var(--red);border:1px solid var(--red);border-radius:12px;width:100%;padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
@@ -135,6 +130,21 @@ input:focus,select:focus{outline:none;border-color:var(--blue)}
 .type-btn.sel-out{background:var(--red-dim);border-color:var(--red);color:var(--red)}
 .empty{color:var(--muted);font-size:13px;text-align:center;padding:18px 0}
 select option{background:#1a1a1a}
+
+/* CALENDAR WIDGET */
+.cal-wrap{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px}
+.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cal-title{font-size:14px;font-weight:600}
+.cal-nav{background:none;border:none;color:var(--text);font-size:18px;cursor:pointer;padding:0 6px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal-day-name{font-size:10px;color:var(--muted);padding:4px 0;font-weight:600}
+.cal-day{font-size:13px;padding:6px 2px;border-radius:6px;cursor:pointer;color:var(--text);border:none;background:none;width:100%}
+.cal-day:hover{background:var(--s3)}
+.cal-day.today{color:var(--blue);font-weight:700}
+.cal-day.selected{background:var(--blue);color:#fff;font-weight:700}
+.cal-day.empty{cursor:default}
+.cal-day.past{color:var(--muted);opacity:.4}
+.cal-selected-display{font-size:13px;color:var(--blue-bright);margin-top:8px;text-align:center;font-weight:500;min-height:20px}
 </style>
 </head>
 <body>
@@ -254,7 +264,7 @@ select option{background:#1a1a1a}
             </div>
             <div class="bill-sub">
               {% if done %}paid off
-              {% elif b.has_due_date %}due in {{ b.due_days }}d
+              {% elif b.has_due_date and b.due_date_fmt %}due {{ b.due_date_fmt }} ({{ b.due_days }}d)
               {% else %}no due date
               {% endif %}
             </div>
@@ -270,7 +280,6 @@ select option{background:#1a1a1a}
         </div>
 
         {% if not done %}
-        <!-- action buttons -->
         <div class="bill-actions">
           <button class="btn-sm btn-pay-sm" onclick="showPay('{{ b.id }}')">Pay toward</button>
           <button class="btn-sm btn-edit-sm" onclick="showEdit('{{ b.id }}')">Edit</button>
@@ -279,18 +288,16 @@ select option{background:#1a1a1a}
           </form>
         </div>
 
-        <!-- pay panel -->
         <div id="pay-{{ b.id }}" style="display:none;margin-bottom:8px">
           <form action="/pay_toward/{{ b.id }}" method="POST">
             <div class="pay-row">
-              <input class="pay-input" type="number" name="amount" placeholder="How much are you paying? $" step="0.01" min="0.01" required>
+              <input class="pay-input" type="number" name="amount" placeholder="How much? $" step="0.01" min="0.01" required>
               <button type="submit" class="btn-confirm">Pay</button>
               <button type="button" class="btn-cancel" onclick="hidePay('{{ b.id }}')">✕</button>
             </div>
           </form>
         </div>
 
-        <!-- edit panel -->
         <div id="edit-{{ b.id }}" class="edit-panel">
           <form action="/edit_bill/{{ b.id }}" method="POST">
             <div class="ep-row">
@@ -316,15 +323,15 @@ select option{background:#1a1a1a}
               </div>
               <div class="ep-fld">
                 <label>Has due date?</label>
-                <select name="has_due_date" onchange="toggleEditDue('{{ b.id }}', this.value)">
+                <select name="has_due_date" onchange="toggleEditDue('{{ b.id }}',this.value)">
                   <option value="yes" {{ 'selected' if b.has_due_date }}>Yes</option>
                   <option value="no" {{ 'selected' if not b.has_due_date }}>No</option>
                 </select>
               </div>
             </div>
             <div class="ep-fld" id="editdue-{{ b.id }}" style="{{ 'display:none' if not b.has_due_date }}">
-              <label>Due in days</label>
-              <input type="number" name="due_days" value="{{ b.due_days if b.has_due_date else '' }}" placeholder="e.g. 7">
+              <label>Due date</label>
+              <input type="date" name="due_date" value="{{ b.due_date if b.due_date else '' }}">
             </div>
             <div class="ep-btns" style="margin-top:8px">
               <button type="submit" class="btn-confirm" style="flex:1">Save</button>
@@ -343,9 +350,11 @@ select option{background:#1a1a1a}
       {% endfor %}
     </div>
 
+    <!-- ADD BILL -->
     <div class="card">
       <div class="card-title">Add a bill</div>
-      <form action="/add_bill" method="POST">
+      <form action="/add_bill" method="POST" id="add-bill-form">
+        <input type="hidden" name="due_date" id="selected-due-date" value="">
         <div class="fld">
           <label>What is it?</label>
           <input type="text" name="bill_name" placeholder="Light bill, parking ticket…" required>
@@ -366,17 +375,22 @@ select option{background:#1a1a1a}
             </select>
           </div>
         </div>
-        <div class="row2">
-          <div class="fld">
-            <label>Has due date?</label>
-            <select name="has_due_date" id="has-due" onchange="toggleDue()">
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </div>
-          <div class="fld" id="due-days-wrap">
-            <label>Due in days</label>
-            <input type="number" name="due_days" id="due-days-input" placeholder="e.g. 7">
+        <div class="fld">
+          <label>Has a due date?</label>
+          <select name="has_due_date" id="has-due" onchange="toggleCalendar()">
+            <option value="no">No due date</option>
+            <option value="yes">Yes — pick a date</option>
+          </select>
+        </div>
+        <div id="cal-container" style="display:none">
+          <div class="cal-wrap">
+            <div class="cal-header">
+              <button type="button" class="cal-nav" onclick="calPrev()">‹</button>
+              <div class="cal-title" id="cal-month-label"></div>
+              <button type="button" class="cal-nav" onclick="calNext()">›</button>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+            <div class="cal-selected-display" id="cal-display">Tap a date to select</div>
           </div>
         </div>
         <button type="submit" class="btn">Add Bill</button>
@@ -387,7 +401,7 @@ select option{background:#1a1a1a}
   <!-- SETTINGS -->
   <div class="page" id="pg-settings">
     <div class="card">
-      <div class="card-title">Starting cash</div>
+      <div class="card-title">Cash on hand</div>
       <form action="/set_cash" method="POST">
         <div class="fld">
           <label>I currently have $</label>
@@ -422,34 +436,92 @@ select option{background:#1a1a1a}
 </div>
 
 <script>
+// TAB NAV
 function go(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('pg-'+name).classList.add('on');
   el.classList.add('on');
 }
+
+// TX TYPE
 function setType(t){
   document.getElementById('txtype').value=t;
   document.getElementById('btn-out').className='type-btn'+(t==='out'?' sel-out':'');
   document.getElementById('btn-in').className='type-btn'+(t==='in'?' sel-in':'');
 }
-function showPay(id){
-  document.getElementById('pay-'+id).style.display='block';
-  hideEdit(id);
-}
+
+// BILL PANELS
+function showPay(id){document.getElementById('pay-'+id).style.display='block';hideEdit(id)}
 function hidePay(id){document.getElementById('pay-'+id).style.display='none'}
-function showEdit(id){
-  document.getElementById('edit-'+id).classList.add('open');
-  hidePay(id);
-}
+function showEdit(id){document.getElementById('edit-'+id).classList.add('open');hidePay(id)}
 function hideEdit(id){document.getElementById('edit-'+id).classList.remove('open')}
-function toggleDue(){
-  const has=document.getElementById('has-due').value==='yes';
-  document.getElementById('due-days-wrap').style.opacity=has?'1':'0.4';
-  document.getElementById('due-days-input').required=has;
-}
 function toggleEditDue(id,val){
   document.getElementById('editdue-'+id).style.display=val==='yes'?'block':'none';
+}
+
+// CALENDAR
+let calYear, calMonth, calSelected=null;
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const today = new Date(); today.setHours(0,0,0,0);
+
+function toggleCalendar(){
+  const has=document.getElementById('has-due').value==='yes';
+  document.getElementById('cal-container').style.display=has?'block':'none';
+  if(has && !calYear){
+    calYear=today.getFullYear();
+    calMonth=today.getMonth();
+    renderCal();
+  }
+}
+
+function calPrev(){
+  calMonth--;
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCal();
+}
+function calNext(){
+  calMonth++;
+  if(calMonth>11){calMonth=0;calYear++;}
+  renderCal();
+}
+
+function renderCal(){
+  document.getElementById('cal-month-label').textContent=MONTHS[calMonth]+' '+calYear;
+  const grid=document.getElementById('cal-grid');
+  grid.innerHTML='';
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>{
+    const el=document.createElement('div');
+    el.className='cal-day-name';el.textContent=d;grid.appendChild(el);
+  });
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  for(let i=0;i<first;i++){
+    const el=document.createElement('div');el.className='cal-day empty';grid.appendChild(el);
+  }
+  for(let d=1;d<=days;d++){
+    const el=document.createElement('button');
+    el.type='button';el.className='cal-day';el.textContent=d;
+    const thisDate=new Date(calYear,calMonth,d);
+    if(thisDate<today) el.classList.add('past');
+    if(thisDate.getTime()===today.getTime()) el.classList.add('today');
+    const yy=calYear;const mm=calMonth;const dd=d;
+    if(calSelected){
+      const s=new Date(calSelected);
+      if(s.getFullYear()===yy&&s.getMonth()===mm&&s.getDate()===dd) el.classList.add('selected');
+    }
+    el.onclick=()=>selectDay(yy,mm,dd);
+    grid.appendChild(el);
+  }
+}
+
+function selectDay(y,m,d){
+  const dateStr=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  calSelected=new Date(y,m,d);
+  document.getElementById('selected-due-date').value=dateStr;
+  const opts={month:'long',day:'numeric',year:'numeric'};
+  document.getElementById('cal-display').textContent='Due: '+calSelected.toLocaleDateString('en-US',opts);
+  renderCal();
 }
 </script>
 </body>
